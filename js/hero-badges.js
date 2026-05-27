@@ -7,14 +7,29 @@ const BADGES = [
   { id: "arrow", label: "↓", kind: "icon" },
 ];
 
-const GRAVITY = 0.52;
-const BOUNCE = 0.44;
-const FRICTION = 0.84;
-const AIR = 0.998;
-const COLLISION_STEPS = 5;
-const REST_VELOCITY = 0.04;
-const SETTLE_FRAMES = 65;
-const COLLISION_IMPULSE = 0.14;
+const GRAVITY = 0.26;
+const GRAVITY_INTRO = 0.12;
+const BOUNCE = 0.3;
+const BOUNCE_INTRO = 0.22;
+const FRICTION = 0.88;
+const AIR = 0.992;
+const AIR_INTRO = 0.994;
+const COLLISION_STEPS = 4;
+const REST_VELOCITY = 0.025;
+const SETTLE_FRAMES = 80;
+const COLLISION_IMPULSE = 0.08;
+const MAX_VX = 5.5;
+const MAX_VY = 4.5;
+const MAX_VY_INTRO = 2.2;
+const SMOOTH = 0.2;
+const SMOOTH_INTRO = 0.14;
+const THROW_DAMPING = 0.52;
+
+const clampVelocity = (chip, intro = false) => {
+  const maxVy = intro ? MAX_VY_INTRO : MAX_VY;
+  chip.vx = Math.max(-MAX_VX, Math.min(MAX_VX, chip.vx));
+  chip.vy = Math.max(-maxVy, Math.min(maxVy, chip.vy));
+};
 
 /** Инициализация физики и перетаскивания бейджей */
 export function initHeroBadges() {
@@ -97,15 +112,27 @@ export function initHeroBadges() {
     state.forEach((chip) => {
       chip.x = Math.random() * Math.max(bounds.width - chip.w - 16, 1) + 8;
       chip.y = bounds.wordsTop - chip.h - 60 - Math.random() * 480;
-      chip.vx = (Math.random() - 0.5) * 8;
-      chip.vy = Math.random() * 3 + 0.5;
-      chip.dropDelay = Math.floor(Math.random() * 22);
+      chip.displayX = chip.x;
+      chip.displayY = chip.y;
+      chip.vx = (Math.random() - 0.5) * 3.5;
+      chip.vy = Math.random() * 0.45;
+      chip.dropDelay = Math.floor(Math.random() * 38);
+      chip.introDrop = true;
       chip.dragging = false;
     });
   };
 
   const applyTransform = (chip) => {
-    chip.el.style.transform = `translate3d(${chip.x}px, ${chip.y}px, 0)`;
+    if (chip.dragging) {
+      chip.displayX = chip.x;
+      chip.displayY = chip.y;
+    } else {
+      const smooth = chip.introDrop ? SMOOTH_INTRO : SMOOTH;
+      chip.displayX += (chip.x - chip.displayX) * smooth;
+      chip.displayY += (chip.y - chip.displayY) * smooth;
+    }
+
+    chip.el.style.transform = `translate3d(${chip.displayX}px, ${chip.displayY}px, 0)`;
   };
 
   const stepChip = (chip, bounds) => {
@@ -113,33 +140,38 @@ export function initHeroBadges() {
 
     if (chip.dropDelay > 0) {
       chip.dropDelay -= 1;
-      chip.x += chip.vx * 0.35;
+      chip.x += chip.vx * 0.2;
       return true;
     }
 
-    chip.vy += GRAVITY;
-    chip.vx *= AIR;
-    chip.vy *= AIR;
+    const intro = chip.introDrop;
+    chip.vy += intro ? GRAVITY_INTRO : GRAVITY;
+    const air = intro ? AIR_INTRO : AIR;
+    chip.vx *= air;
+    chip.vy *= air;
     chip.x += chip.vx;
     chip.y += chip.vy;
+    clampVelocity(chip, intro);
 
     if (chip.x < 0) {
       chip.x = 0;
-      chip.vx *= -BOUNCE;
+      chip.vx *= -(intro ? BOUNCE_INTRO : BOUNCE);
     } else if (chip.x + chip.w > bounds.width) {
       chip.x = bounds.width - chip.w;
-      chip.vx *= -BOUNCE;
+      chip.vx *= -(intro ? BOUNCE_INTRO : BOUNCE);
     }
 
     const floor = bounds.landingLine - chip.h;
     if (chip.y > floor) {
       chip.y = floor;
+      const bounce = intro ? BOUNCE_INTRO : BOUNCE;
       if (Math.abs(chip.vy) > REST_VELOCITY) {
-        chip.vy *= -BOUNCE;
+        chip.vy *= -bounce;
         chip.vx *= FRICTION;
       } else {
         chip.vy = 0;
         chip.vx *= 0.92;
+        if (intro) chip.introDrop = false;
       }
     }
 
@@ -149,7 +181,12 @@ export function initHeroBadges() {
       if (chip.vy < 0) chip.vy *= -BOUNCE * 0.5;
     }
 
-    return Math.abs(chip.vx) > REST_VELOCITY || Math.abs(chip.vy) > REST_VELOCITY;
+    return (
+      Math.abs(chip.vx) > REST_VELOCITY ||
+      Math.abs(chip.vy) > REST_VELOCITY ||
+      Math.abs(chip.x - chip.displayX) > 0.08 ||
+      Math.abs(chip.y - chip.displayY) > 0.08
+    );
   };
 
   const resolveCollisions = () => {
@@ -205,6 +242,7 @@ export function initHeroBadges() {
     if (event.button !== 0) return;
     activePointer = event.pointerId;
     chip.dragging = true;
+    chip.introDrop = false;
     chip.el.setPointerCapture(event.pointerId);
     chip.el.classList.add("is-dragging");
 
@@ -224,10 +262,11 @@ export function initHeroBadges() {
     const nextX = event.clientX - fieldRect.left - chip.offsetX;
     const nextY = event.clientY - fieldRect.top - chip.offsetY;
 
-    chip.vx = (nextX - chip.x) * 0.72;
-    chip.vy = (nextY - chip.y) * 0.72;
+    chip.vx = chip.vx * 0.55 + (nextX - chip.x) * 0.38;
+    chip.vy = chip.vy * 0.55 + (nextY - chip.y) * 0.38;
     chip.x = nextX;
     chip.y = nextY;
+    clampVelocity(chip);
     applyTransform(chip);
   };
 
@@ -238,11 +277,15 @@ export function initHeroBadges() {
     chip.el.releasePointerCapture(event.pointerId);
     activePointer = null;
 
-    if (Math.hypot(chip.vx, chip.vy) < 0.8) {
-      chip.vx = (Math.random() - 0.5) * 3;
-      chip.vy = -1.5;
+    chip.vx *= THROW_DAMPING;
+    chip.vy *= THROW_DAMPING;
+
+    if (Math.hypot(chip.vx, chip.vy) < 0.5) {
+      chip.vx = (Math.random() - 0.5) * 1.5;
+      chip.vy = 0.2;
     }
 
+    clampVelocity(chip);
     startLoop();
   };
 
@@ -283,6 +326,8 @@ function createChipState(el, index) {
     index,
     x: 0,
     y: 0,
+    displayX: 0,
+    displayY: 0,
     vx: 0,
     vy: 0,
     w: 0,
@@ -291,6 +336,7 @@ function createChipState(el, index) {
     offsetX: 0,
     offsetY: 0,
     dropDelay: 0,
+    introDrop: false,
   };
 }
 
@@ -345,7 +391,13 @@ function separate(a, b) {
   upper.y = lower.y - upper.h;
 
   if (upper.vy > 0) {
-    upper.vy *= -BOUNCE * 0.55;
-    upper.vx += lower.vx * 0.12;
+    const bounce = upper.introDrop ? BOUNCE_INTRO : BOUNCE;
+    upper.vy *= -bounce * 0.45;
+    upper.vx += lower.vx * 0.08;
+    clampVelocity(upper, upper.introDrop);
+
+    if (upper.introDrop && Math.abs(upper.vy) < REST_VELOCITY * 3) {
+      upper.introDrop = false;
+    }
   }
 }
