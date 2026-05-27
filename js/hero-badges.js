@@ -2,7 +2,7 @@ const BADGES = [
   { id: "diverse", label: "DIVERSE", kind: "text" },
   { id: "designer", label: "DESIGNER", kind: "text" },
   { id: "multidisciplinary", label: "MULTIDISCIPLINARY", kind: "text" },
-  { id: "korean", label: "KOREAN", kind: "text" },
+  { id: "russia", label: "RUSSIA", kind: "text" },
   { id: "star", label: "*", kind: "icon" },
   { id: "arrow", label: "↓", kind: "icon" },
 ];
@@ -95,7 +95,7 @@ export function initHeroBadges() {
       wordsTop: words.top,
       wordsBottom: words.bottom,
       wordHeight,
-      // линия приземления — слегка на верхний край JENNY / PARK
+      // линия приземления — слегка на верхний край NIKA / SABLINA
       landingLine: words.top + wordHeight * 0.1,
     };
   };

@@ -46,13 +46,13 @@ function renderHome() {
               <h1 class="hero__name">
                 <div class="hero__title-row" id="hero-title-row">
                   <div class="hero__name-col">
-                    <span class="hero__title-word">JENNY</span>
+                    <span class="hero__title-word">NIKA</span>
                     <p class="hero__caption hero__caption--left">
-                      Hi, I'm Jenny, a korean designer that loves experimenting and archiving
+                      Hi, I'm Nika, a russian designer that loves experimenting and archiving
                     </p>
                   </div>
                   <div class="hero__name-col">
-                    <span class="hero__title-word">PARK</span>
+                    <span class="hero__title-word">SABLINA</span>
                     <p class="hero__caption hero__caption--right">
                       *Digital Designer, focusing on crafting visual stories across branding and consumer-focused design
                     </p>
@@ -80,7 +80,7 @@ function renderHome() {
   initHeroBadges();
 }
 
-/** Масштабирует JENNY PARK на всю ширину экрана */
+/** Масштабирует NIKA SABLINA на всю ширину экрана */
 function fitHeroTitle() {
   const row = document.getElementById("hero-title-row");
   const block = row?.closest(".hero-block");

@@ -1,31 +1,19 @@
 /** Контакты и внешние ссылки */
 export const site = {
   name: "JPBUGS",
-  title: "Jenny Park | Graphic Design Portfolio",
+  title: "Nika Sablina | Graphic Design Portfolio",
   description: "Featuring design works, crafted to offer multifaceted experiences for the viewers.",
-  resumeUrl: "https://drive.google.com/file/d/19Am4aV7YxixACNo4Nltvf128sZW1mFSh/view?usp=sharing",
-  linkedin: "https://www.linkedin.com/in/jenny-park00/",
-  instagram: "https://www.instagram.com/_jpbugs_/",
-  email: "jpbugs.design@gmail.com",
+  email: "cometa.nv.01@mail.ru",
+  telegram: "https://t.me/N6Ssa",
 };
 
-export const marqueeWords = ["DIVERSE", "DESIGNER", "MULTIDISCIPLINARY", "KOREAN"];
+export const marqueeWords = ["DIVERSE", "DESIGNER", "MULTIDISCIPLINARY", "RUSSIA"];
 
 export const works = [
   { slug: "redefine-foods", title: "Redefine Foods™", category: "Branding / Packaging Design", year: "2025", thumb: "https://framerusercontent.com/images/kkGYQEXbbFkYLZUeaiMrxM4F8rg.png?width=4480&height=3360" },
   { slug: "alienography", title: "Alienography", category: "Type Design", year: "2024", thumb: "https://framerusercontent.com/images/ZtdDLi6wtoob9NS6x2aRMi51cw.png?width=4480&height=3360" },
   { slug: "neighborhood-design", title: "FREEPIK", category: "Brand Identity", year: "2024", thumb: "https://framerusercontent.com/images/5HCey7FmhzZJ3zXco9OZj6vdTQ.png?width=869&height=587" },
   { slug: "park-me", title: "ParkMe", category: "UI/UX Design", year: "2024", thumb: "https://framerusercontent.com/images/ERN1TeMEvWj67G7tRFH98Tbwhs.png?width=4000&height=3000" },
-  { slug: "atoms", title: "Atoms", category: "UI/UX Design", year: "2023", thumb: "https://framerusercontent.com/images/2POFmcfrHMa8IQEDlX7LKNv602M.png?width=4000&height=2667" },
-  { slug: "miller-knoll", title: "MillerKnoll", category: "Brand Identity", year: "2023", thumb: "https://framerusercontent.com/images/QQ2RIP7Tpj16SScwgvjBTmUYACA.png?width=4000&height=2667" },
-  { slug: "spy", title: "SPY", category: "Brand Identity", year: "2024", thumb: "https://framerusercontent.com/images/NmBHSRwhBwsQyUMpzT4i8IYfUCM.png?width=1653&height=900" },
-  { slug: "qahira", title: "Qahira", category: "Packaging Design", year: "2023", thumb: "https://framerusercontent.com/images/UJiUPK5jPu8g56FF5fl2BgDg64.png?width=3480&height=2610" },
-  { slug: "go-go", title: "GoGo", category: "UI/UX Design", year: "2022", thumb: "https://framerusercontent.com/images/8Wsp6fprYA9ZDRzbmPkrkcbziMM.png?width=4480&height=3360" },
-  { slug: "wagging-hearts", title: "WAGGING HEARTS", category: "Brand Identity", year: "2023", thumb: "https://framerusercontent.com/images/OZGW8TEQbTUtelBoznA9KrJyiug.png?width=4480&height=3360" },
-  { slug: "related-department", title: "Related Department", category: "Editorial Design / Publications", year: "2023", thumb: "https://framerusercontent.com/images/R6P4sBLOp6VhzJw8DUYirvpeg.png?width=3500&height=3500" },
-  { slug: "blue-dragon", title: "청룡", category: "Brand Identity", year: "2024", thumb: "https://framerusercontent.com/images/AT3Mds29MwvNB0damgyCwEuKY.png?width=3841&height=2161" },
-  { slug: "conversation", title: "Conversation", category: "3D Motion Graphics", year: "2023", thumb: "https://framerusercontent.com/images/ZhpdF8ap1P7IaCK4ZIfM7n5KH4.png?width=1245&height=895" },
-  { slug: "seen-and-unseen", title: "SEEN & UNSEEN", category: "Concept Design", year: "2024", thumb: "https://framerusercontent.com/images/4eFUbfz34UeMdxrRdgsKh0HVgg.png?width=4480&height=3360" },
 ];
 
 export const projects = {

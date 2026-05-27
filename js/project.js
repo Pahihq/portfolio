@@ -9,7 +9,7 @@ export function initProjectPage(slug) {
   }
 
   const { prev, next } = getAdjacentProjects(slug);
-  document.title = `${project.displayTitle} — Jenny Park`;
+  document.title = `${project.displayTitle} — Nika Sablina`;
 
   const servicesHtml = project.services.map((s) => `<span>${s}</span>`).join("");
   const toolsHtml = project.tools.map((t) => `<span>${t}</span>`).join("");

@@ -3,7 +3,6 @@ import { site } from "./data.js";
 const navItems = [
   { label: "ABOUT", href: "/#about", id: "about" },
   { label: "ARCHIVE", href: "/playground.html", id: "archive" },
-  { label: "RESUME", href: site.resumeUrl, id: "resume", external: true },
   { label: "CONTACT", href: "/#contact", id: "contact" },
 ];
 
@@ -65,8 +64,7 @@ export function renderFooter() {
 
         <div class="footer__center">
           <div class="footer__socials">
-            <a class="social-btn" href="${site.linkedin}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a class="social-btn" href="${site.instagram}" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a class="social-btn" href="${site.telegram}" target="_blank" rel="noopener noreferrer">Telegram</a>
             <button class="social-btn" id="email-btn" type="button" data-email="${site.email}">Email</button>
           </div>
           <button class="footer__top" id="scroll-top-btn" type="button" aria-label="Back to top">↑</button>
