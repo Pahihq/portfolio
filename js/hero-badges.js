@@ -25,8 +25,8 @@ const SMOOTH = 0.2;
 const SMOOTH_INTRO = 0.14;
 const THROW_DAMPING = 0.52;
 const MOBILE_WIDTH = 600;
-const TITLE_GAP = 14;
-const MOBILE_TITLE_GAP = 18;
+const TITLE_GAP = 18;
+const MOBILE_TITLE_GAP = 22;
 const ROTATION_AIR = 0.988;
 const ROTATION_BOUNCE = 0.72;
 const REST_ANGULAR = 0.04;
@@ -56,13 +56,35 @@ const getRotatedHalfHeight = (chip) => {
 const getMaxChipY = (chip, bounds) =>
   bounds.textTop - bounds.titleGap - chip.h / 2 - getRotatedHalfHeight(chip);
 
+const getChipVisualBounds = (chip) => {
+  const rad = (chip.angle * Math.PI) / 180;
+  const halfH = getRotatedHalfHeight(chip);
+  const halfW = (Math.abs(Math.cos(rad)) * chip.w + Math.abs(Math.sin(rad)) * chip.h) / 2;
+  const cy = chip.y + chip.h / 2;
+  const cx = chip.x + chip.w / 2;
+
+  return {
+    top: cy - halfH,
+    bottom: cy + halfH,
+    left: cx - halfW,
+    right: cx + halfW,
+  };
+};
+
+const chipOverlapsText = (chip, bounds) => {
+  const visual = getChipVisualBounds(chip);
+  return visual.bottom > bounds.textTop && visual.top < bounds.textBottom;
+};
+
 /** Инициализация физики и перетаскивания бейджей */
 export function initHeroBadges() {
-  const field = document.getElementById("hero-badge-field");
+  const stage = document.querySelector(".hero-body");
+  const fieldBack = document.getElementById("hero-badge-field-back");
+  const fieldFront = document.getElementById("hero-badge-field-front");
   const titleRow = document.getElementById("hero-title-row");
-  if (!field || !titleRow) return;
+  if (!stage || !fieldBack || !fieldFront || !titleRow) return;
 
-  field.innerHTML = BADGES.map(
+  fieldFront.innerHTML = BADGES.map(
     ({ id, label, kind }) => {
       const inner =
         kind === "icon"
@@ -78,15 +100,17 @@ export function initHeroBadges() {
     }
   ).join("");
 
-  const chips = [...field.querySelectorAll(".hero-badge-chip")];
+  const chips = [...fieldFront.querySelectorAll(".hero-badge-chip")];
   const state = chips.map((el, index) => createChipState(el, index));
 
   let rafId = 0;
   let activePointer = null;
   let settleFrames = 0;
 
+  const getStageRect = () => stage.getBoundingClientRect();
+
   const getHeroTextZone = () => {
-    const fieldRect = field.getBoundingClientRect();
+    const stageRect = getStageRect();
     const words = titleRow.querySelectorAll(".hero__title-word");
     let textTop = Infinity;
     let textBottom = -Infinity;
@@ -110,20 +134,20 @@ export function initHeroBadges() {
     }
 
     return {
-      textTop: textTop - fieldRect.top,
-      textBottom: textBottom - fieldRect.top,
+      textTop: textTop - stageRect.top,
+      textBottom: textBottom - stageRect.top,
     };
   };
 
   const getBounds = () => {
-    const fieldRect = field.getBoundingClientRect();
+    const stageRect = getStageRect();
     const { textTop, textBottom } = getHeroTextZone();
     const isMobile = fieldRect.width <= MOBILE_WIDTH;
     const titleGap = isMobile ? MOBILE_TITLE_GAP : TITLE_GAP;
 
     return {
-      width: fieldRect.width,
-      height: fieldRect.height,
+      width: stageRect.width,
+      height: stageRect.height,
       textTop,
       textBottom,
       wordsTop: textTop,
@@ -142,6 +166,14 @@ export function initHeroBadges() {
       chip.y = maxY;
       if (chip.vy > 0) chip.vy = 0;
     }
+  };
+
+  const updateChipLayer = (chip, bounds) => {
+    const layer = chipOverlapsText(chip, bounds) ? fieldBack : fieldFront;
+    if (chip.el.parentElement !== layer) {
+      layer.appendChild(chip.el);
+    }
+    chip.el.classList.toggle("hero-badge-chip--behind", layer === fieldBack);
   };
 
   const layoutSizes = () => {
@@ -290,6 +322,7 @@ export function initHeroBadges() {
 
     state.forEach((chip) => {
       clampChipAboveTitle(chip, bounds);
+      updateChipLayer(chip, bounds);
     });
 
     // при перетаскивании — не даём провалиться сквозь другие блоки
@@ -301,6 +334,7 @@ export function initHeroBadges() {
         });
       }
       clampChipAboveTitle(chip, bounds);
+      updateChipLayer(chip, bounds);
     });
 
     state.forEach(applyTransform);
@@ -326,7 +360,7 @@ export function initHeroBadges() {
     chip.el.setPointerCapture(event.pointerId);
     chip.el.classList.add("is-dragging");
 
-    const fieldRect = field.getBoundingClientRect();
+    const fieldRect = stage.getBoundingClientRect();
     chip.offsetX = event.clientX - fieldRect.left - chip.x;
     chip.offsetY = event.clientY - fieldRect.top - chip.y;
     chip.vx = 0;
@@ -343,7 +377,7 @@ export function initHeroBadges() {
   const onPointerMove = (event, chip) => {
     if (!chip.dragging || event.pointerId !== activePointer) return;
 
-    const fieldRect = field.getBoundingClientRect();
+    const fieldRect = stage.getBoundingClientRect();
     const prevX = chip.x;
     const prevY = chip.y;
     const nextX = event.clientX - fieldRect.left - chip.offsetX;
@@ -366,7 +400,9 @@ export function initHeroBadges() {
     chip.spinPointerAngle = pointerAngle;
 
     applyDragTorque(chip, prevX, prevY, nextX, nextY);
-    clampChipAboveTitle(chip, getBounds());
+    const bounds = getBounds();
+    clampChipAboveTitle(chip, bounds);
+    updateChipLayer(chip, bounds);
     clampVelocity(chip);
     applyTransform(chip);
   };
@@ -402,14 +438,21 @@ export function initHeroBadges() {
     layoutSizes();
     scatterAbove();
     settleFrames = 0;
-    state.forEach(applyTransform);
+    const bounds = getBounds();
+    state.forEach((chip) => {
+      updateChipLayer(chip, bounds);
+      applyTransform(chip);
+    });
     startLoop();
   };
 
   const relayout = () => {
     layoutSizes();
     const bounds = getBounds();
-    state.forEach((chip) => clampChipAboveTitle(chip, bounds));
+    state.forEach((chip) => {
+      clampChipAboveTitle(chip, bounds);
+      updateChipLayer(chip, bounds);
+    });
     settleFrames = 0;
     startLoop();
   };

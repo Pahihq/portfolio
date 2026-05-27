@@ -290,9 +290,16 @@ ul {
 .hero-badge-field {
   position: absolute;
   inset: 0;
-  z-index: 4;
   pointer-events: none;
   overflow: visible;
+}
+
+.hero-badge-field--back {
+  z-index: 1;
+}
+
+.hero-badge-field--front {
+  z-index: 3;
 }
 
 .hero-badge-chip {
@@ -376,6 +383,8 @@ ul {
 }
 
 .hero__name {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -390,7 +399,7 @@ ul {
   flex-wrap: nowrap;
   align-items: baseline;
   justify-content: flex-start;
-  gap: 0.12em;
+  gap: 0.2em;
   width: 100%;
   font-family: var(--font-display);
   font-weight: 500;
@@ -985,7 +994,7 @@ ul {
     flex-wrap: nowrap;
     align-items: baseline;
     justify-content: flex-start;
-    gap: 0.1em;
+    gap: 0.16em;
   }
 
   .hero__caption-row {

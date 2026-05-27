@@ -50,9 +50,12 @@ export function renderHeader(activePage = "") {
   `;
 }
 
-/** Контейнер для физических бейджей */
+/** Слои для бейджей: сзади и спереди текста */
 export function renderHeroBadges() {
-  return `<div class="hero-badge-field" id="hero-badge-field" aria-hidden="true"></div>`;
+  return `
+    <div class="hero-badge-field hero-badge-field--back" id="hero-badge-field-back" aria-hidden="true"></div>
+    <div class="hero-badge-field hero-badge-field--front" id="hero-badge-field-front" aria-hidden="true"></div>
+  `;
 }
 
 /** Рендер блока контактов в подвале */

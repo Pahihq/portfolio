@@ -1,7 +1,6 @@
 import { works } from "./data.js";
 import {
   renderHeroNav,
-  renderHeroBadges,
   renderFooter,
   initCommon,
 } from "./components.js";
@@ -41,7 +40,7 @@ function renderHome() {
           ${renderHeroNav()}
 
           <div class="hero-body">
-            ${renderHeroBadges()}
+            <div class="hero-badge-field hero-badge-field--back" id="hero-badge-field-back" aria-hidden="true"></div>
             <div class="hero-block fade-in" id="about">
               <h1 class="hero__name">
                 <div class="hero__title-row" id="hero-title-row">
@@ -58,6 +57,7 @@ function renderHome() {
                 </div>
               </h1>
             </div>
+            <div class="hero-badge-field hero-badge-field--front" id="hero-badge-field-front" aria-hidden="true"></div>
           </div>
         </section>
 
@@ -90,7 +90,7 @@ function fitHeroTitle() {
 
     const available = container.clientWidth;
     const words = row.querySelectorAll(".hero__title-word");
-    const gap = parseFloat(getComputedStyle(row).columnGap || getComputedStyle(row).gap) || 0;
+    if (!words.length) return;
 
     let lo = 16;
     let hi = available;
@@ -99,12 +99,15 @@ function fitHeroTitle() {
       const mid = (lo + hi) / 2;
       row.style.fontSize = `${mid}px`;
 
+      const gap =
+        parseFloat(getComputedStyle(row).columnGap || getComputedStyle(row).gap) || 0;
+
       let total = gap * Math.max(words.length - 1, 0);
       words.forEach((word) => {
         total += word.offsetWidth;
       });
 
-      if (total <= available) lo = mid;
+      if (total <= available - 4) lo = mid;
       else hi = mid;
     }
 
@@ -118,7 +121,17 @@ function fitHeroTitle() {
     document.fonts.ready.then(fit);
   }
 
-  window.addEventListener("resize", fit);
+  const container = row.parentElement;
+  if (container && "ResizeObserver" in window) {
+    const observer = new ResizeObserver(fit);
+    observer.observe(container);
+  } else {
+    window.addEventListener("resize", fit);
+  }
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", fit);
+  }
 }
 
 renderHome();
