@@ -1,16 +1,19 @@
 const BADGES = [
   { id: "diverse", label: "DIVERSE", kind: "text" },
-  { id: "designer", label: "DESIGNER", kind: "text", tilt: -12 },
+  { id: "designer", label: "DESIGNER", kind: "text" },
   { id: "multidisciplinary", label: "MULTIDISCIPLINARY", kind: "text" },
   { id: "korean", label: "KOREAN", kind: "text" },
   { id: "star", label: "*", kind: "icon" },
   { id: "arrow", label: "↓", kind: "icon" },
 ];
 
-const GRAVITY = 0.55;
-const BOUNCE = 0.38;
-const FRICTION = 0.82;
-const DAMPING = 0.98;
+const GRAVITY = 0.34;
+const BOUNCE = 0.24;
+const FRICTION = 0.9;
+const AIR = 0.994;
+const COLLISION_STEPS = 3;
+const REST_VELOCITY = 0.06;
+const SETTLE_FRAMES = 45;
 
 /** Инициализация физики и перетаскивания бейджей */
 export function initHeroBadges() {
@@ -19,13 +22,19 @@ export function initHeroBadges() {
   if (!field || !titleRow) return;
 
   field.innerHTML = BADGES.map(
-    ({ id, label, kind, tilt = 0 }) => `
-      <div
-        class="hero-badge-chip${kind === "icon" ? " hero-badge-chip--icon" : ""}"
-        data-badge="${id}"
-        data-tilt="${tilt}"
-      >${label}</div>
-    `
+    ({ id, label, kind }) => {
+      const inner =
+        kind === "icon"
+          ? label
+          : `<span class="hero-badge-chip__label">${label}</span>`;
+
+      return `
+        <div
+          class="hero-badge-chip${kind === "icon" ? " hero-badge-chip--icon" : ""}"
+          data-badge="${id}"
+        >${inner}</div>
+      `;
+    }
   ).join("");
 
   const chips = [...field.querySelectorAll(".hero-badge-chip")];
@@ -33,14 +42,45 @@ export function initHeroBadges() {
 
   let rafId = 0;
   let activePointer = null;
+  let settleFrames = 0;
+
+  const getTitleWordsRect = () => {
+    const fieldRect = field.getBoundingClientRect();
+    const words = titleRow.querySelectorAll(".hero__title-word");
+    let top = Infinity;
+    let bottom = -Infinity;
+
+    words.forEach((word) => {
+      const rect = word.getBoundingClientRect();
+      top = Math.min(top, rect.top);
+      bottom = Math.max(bottom, rect.bottom);
+    });
+
+    if (!Number.isFinite(top)) {
+      const titleRect = titleRow.getBoundingClientRect();
+      top = titleRect.top;
+      bottom = titleRect.top + titleRect.height * 0.55;
+    }
+
+    return {
+      top: top - fieldRect.top,
+      bottom: bottom - fieldRect.top,
+    };
+  };
 
   const getBounds = () => {
     const fieldRect = field.getBoundingClientRect();
-    const titleRect = titleRow.getBoundingClientRect();
+    const words = getTitleWordsRect();
+    const wordHeight = Math.max(words.bottom - words.top, 1);
+
     return {
       width: fieldRect.width,
       height: fieldRect.height,
-      floor: titleRect.top - fieldRect.top - 8,
+      wordsTop: words.top,
+      wordsBottom: words.bottom,
+      wordHeight,
+      // линия приземления — чуть выше надписи JENNY / PARK
+      landingLine: words.top - 14,
     };
   };
 
@@ -52,11 +92,11 @@ export function initHeroBadges() {
   };
 
   const scatterAbove = () => {
-    const { width } = getBounds();
+    const bounds = getBounds();
     state.forEach((chip, i) => {
-      chip.x = (width / (state.length + 1)) * (i + 1) - chip.w / 2;
+      chip.x = (bounds.width / (state.length + 1)) * (i + 1) - chip.w / 2;
       chip.x += (Math.random() - 0.5) * 48;
-      chip.y = -120 - Math.random() * 240;
+      chip.y = bounds.wordsTop - chip.h - 80 - Math.random() * 220;
       chip.vx = (Math.random() - 0.5) * 2.5;
       chip.vy = 0;
       chip.dragging = false;
@@ -64,36 +104,48 @@ export function initHeroBadges() {
   };
 
   const applyTransform = (chip) => {
-    const tilt = Number(chip.el.dataset.tilt) || 0;
-    const rotate = tilt ? `rotate(${tilt}deg) ` : "";
-    chip.el.style.transform = `${rotate}translate(${chip.x}px, ${chip.y}px)`;
+    chip.el.style.transform = `translate3d(${chip.x}px, ${chip.y}px, 0)`;
   };
 
-  const resolveCollisions = (bounds) => {
-    state.forEach((chip) => {
-      if (chip.dragging) return;
+  const stepChip = (chip, bounds) => {
+    if (chip.dragging) return false;
 
-      if (chip.x < 0) {
-        chip.x = 0;
-        chip.vx *= -BOUNCE;
-      } else if (chip.x + chip.w > bounds.width) {
-        chip.x = bounds.width - chip.w;
-        chip.vx *= -BOUNCE;
+    chip.vy += GRAVITY;
+    chip.vx *= AIR;
+    chip.vy *= AIR;
+    chip.x += chip.vx;
+    chip.y += chip.vy;
+
+    if (chip.x < 0) {
+      chip.x = 0;
+      chip.vx *= -BOUNCE;
+    } else if (chip.x + chip.w > bounds.width) {
+      chip.x = bounds.width - chip.w;
+      chip.vx *= -BOUNCE;
+    }
+
+    const floor = bounds.landingLine - chip.h;
+    if (chip.y > floor) {
+      chip.y = floor;
+      if (Math.abs(chip.vy) > REST_VELOCITY) {
+        chip.vy *= -BOUNCE;
+        chip.vx *= FRICTION;
+      } else {
+        chip.vy = 0;
+        chip.vx *= 0.92;
       }
+    }
 
-      const floor = bounds.floor - chip.h;
-      if (chip.y > floor) {
-        chip.y = floor;
-        if (Math.abs(chip.vy) > 0.4) {
-          chip.vy *= -BOUNCE;
-          chip.vx *= FRICTION;
-        } else {
-          chip.vy = 0;
-          chip.vx *= 0.9;
-        }
-      }
-    });
+    const minY = bounds.wordsTop - chip.h * 1.6;
+    if (chip.y < minY && !chip.dragging) {
+      chip.y = minY;
+      if (chip.vy < 0) chip.vy *= -BOUNCE * 0.5;
+    }
 
+    return Math.abs(chip.vx) > REST_VELOCITY || Math.abs(chip.vy) > REST_VELOCITY;
+  };
+
+  const resolveCollisions = () => {
     for (let i = 0; i < state.length; i++) {
       for (let j = i + 1; j < state.length; j++) {
         separate(state[i], state[j]);
@@ -107,24 +159,22 @@ export function initHeroBadges() {
 
     state.forEach((chip) => {
       if (chip.dragging) {
-        applyTransform(chip);
+        moving = true;
         return;
       }
-
-      chip.vy += GRAVITY;
-      chip.vx *= DAMPING;
-      chip.vy *= DAMPING;
-      chip.x += chip.vx;
-      chip.y += chip.vy;
-
-      if (Math.abs(chip.vx) > 0.05 || Math.abs(chip.vy) > 0.05) moving = true;
-
-      applyTransform(chip);
+      if (stepChip(chip, bounds)) moving = true;
     });
 
-    resolveCollisions(bounds);
+    for (let step = 0; step < COLLISION_STEPS; step++) {
+      resolveCollisions();
+    }
 
-    if (moving || state.some((c) => c.dragging)) {
+    state.forEach(applyTransform);
+
+    if (moving || state.some((c) => c.dragging)) settleFrames = 0;
+    else settleFrames += 1;
+
+    if (moving || state.some((c) => c.dragging) || settleFrames < SETTLE_FRAMES) {
       rafId = requestAnimationFrame(tick);
     }
   };
@@ -182,12 +232,14 @@ export function initHeroBadges() {
   const dropIn = () => {
     layoutSizes();
     scatterAbove();
+    settleFrames = 0;
     state.forEach(applyTransform);
     startLoop();
   };
 
   const relayout = () => {
     layoutSizes();
+    settleFrames = 0;
     startLoop();
   };
 
