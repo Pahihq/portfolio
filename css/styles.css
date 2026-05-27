@@ -17,7 +17,7 @@
   --color-card-title: #000000;
   --color-card-category: #8f8f8f;
   --color-card-year-bg: #e8e8e8;
-  --color-card-year-text: #666666;
+  --color-card-year-text: #000000;
 }
 
 [data-theme="light"] {
@@ -35,7 +35,7 @@
   --color-card-title: #000000;
   --color-card-category: #8f8f8f;
   --color-card-year-bg: #e8e8e8;
-  --color-card-year-text: #666666;
+  --color-card-year-text: #000000;
 }
 
 :root {
