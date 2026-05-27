@@ -61,12 +61,38 @@ function renderHome() {
           </div>
         </section>
 
+        <section class="about">
+          <p class="about__lead fade-in">Я графический дизайнер.</p>
+          <p class="about__text fade-in">
+            Создаю айдентику, упаковку, постеры и визуальные концепции с характером. Работаю с формой,
+            типографикой, материалами и образами, чтобы дизайн не просто выглядел красиво, а запоминался и работал.
+          </p>
+        </section>
+
         <section class="works" id="works">
           <div class="works__header fade-in">
             <h2 class="works__title">Selected Works</h2>
             <span class="works__period">2020 - 2025</span>
           </div>
           <div class="works__grid">${worksGrid}</div>
+        </section>
+
+        <section class="approach">
+          <h2 class="approach__title fade-in">Мой подход</h2>
+          <div class="approach__body">
+            <p class="approach__text fade-in">
+              Я начинаю проект не с украшений, а с идеи. Мне важно понять, какой образ должен остаться у
+              человека после контакта с дизайном: ощущение, ассоциация, настроение, жест.
+            </p>
+            <p class="approach__text fade-in">
+              После этого я ищу визуальный язык: цвет, типографику, форму, материал, ритм, композицию. Я не
+              боюсь делать дизайн наивным, грубым, странным или чрезмерным, если именно это делает проект точнее.
+            </p>
+            <p class="approach__text fade-in">
+              Для меня дизайн — это не просто «сделать красиво». Это способ собрать смысл в форму, которую можно
+              увидеть, потрогать, запомнить и отличить от сотни одинаковых решений.
+            </p>
+          </div>
         </section>
       </main>
       ${renderFooter()}
