@@ -1,6 +1,6 @@
 /** Контакты и внешние ссылки */
 export const site = {
-  name: "JPBUGS",
+  name: "NSBUGS",
   title: "Nika Sablina | Graphic Design Portfolio",
   description: "Featuring design works, crafted to offer multifaceted experiences for the viewers.",
   email: "cometa.nv.01@mail.ru",

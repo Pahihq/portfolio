@@ -23,6 +23,7 @@ const projectInputs = Object.fromEntries(
 );
 
 export default defineConfig({
+  base: "/portfolio/",
   appType: "mpa",
   build: {
     rollupOptions: {
