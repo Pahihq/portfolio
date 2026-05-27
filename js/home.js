@@ -100,7 +100,7 @@ function fitHeroTitle() {
     const words = row.querySelectorAll(".hero__title-word");
     const gap = parseFloat(getComputedStyle(row).columnGap || getComputedStyle(row).gap) || 0;
 
-    let lo = 48;
+    let lo = 24;
     let hi = available;
 
     while (hi - lo > 0.5) {

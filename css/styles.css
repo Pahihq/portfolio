@@ -978,10 +978,10 @@ ul {
   }
 
   .hero__title-row {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
-    gap: clamp(24px, 6vh, 48px);
-    font-size: clamp(44px, 14vw, 72px);
+    justify-content: space-between;
+    gap: 0.28em;
   }
 
   .hero__caption {
