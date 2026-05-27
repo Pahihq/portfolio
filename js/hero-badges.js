@@ -142,7 +142,7 @@ export function initHeroBadges() {
   const getBounds = () => {
     const stageRect = getStageRect();
     const { textTop, textBottom } = getHeroTextZone();
-    const isMobile = fieldRect.width <= MOBILE_WIDTH;
+    const isMobile = stageRect.width <= MOBILE_WIDTH;
     const titleGap = isMobile ? MOBILE_TITLE_GAP : TITLE_GAP;
 
     return {
