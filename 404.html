@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 — Jenny Park</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@500;600&family=Inter+Tight:wght@400;500&family=Space+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <script src="/js/theme-init.js"></script>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link
+      rel="icon"
+      href="https://framerusercontent.com/images/gPnMZWhTzTEqeQkMscPvflUGpBE.png"
+    />
+  </head>
+  <body>
+    <div class="page">
+      <header class="header" id="header">
+        <div class="container container--content header__inner">
+          <a class="logo" href="/">JPBUGS</a>
+          <nav class="nav" aria-label="Main navigation">
+            <a class="nav__link" href="/#about">ABOUT</a>
+            <a class="nav__link" href="/playground.html">ARCHIVE</a>
+            <a
+              class="nav__link"
+              href="https://drive.google.com/file/d/19Am4aV7YxixACNo4Nltvf128sZW1mFSh/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              >RESUME</a
+            >
+            <a class="nav__link" href="/#contact">CONTACT</a>
+          </nav>
+          <button class="theme-switch" id="theme-switch" type="button" aria-label="Toggle light and dark theme">
+            <span class="theme-switch__half theme-switch__half--light"></span>
+            <span class="theme-switch__half theme-switch__half--dark"></span>
+          </button>
+        </div>
+      </header>
+      <main class="not-found">
+        <h1 class="not-found__title">Oops!</h1>
+        <p class="not-found__text">
+          Temporarily unavailable, but I'll be back! Stay tuned.
+        </p>
+        <a class="not-found__link" href="/">Back to Home</a>
+      </main>
+    </div>
+    <script type="module">
+      import { initCommon } from "/js/components.js";
+      initCommon();
+    </script>
+  </body>
+</html>
