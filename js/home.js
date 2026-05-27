@@ -45,18 +45,16 @@ function renderHome() {
             <div class="hero-block fade-in" id="about">
               <h1 class="hero__name">
                 <div class="hero__title-row" id="hero-title-row">
-                  <div class="hero__name-col">
-                    <span class="hero__title-word">NIKA</span>
-                    <p class="hero__caption hero__caption--left">
-                      Hi, I'm Nika, a russian designer that loves experimenting and archiving
-                    </p>
-                  </div>
-                  <div class="hero__name-col">
-                    <span class="hero__title-word">SABLINA</span>
-                    <p class="hero__caption hero__caption--right">
-                      *Digital Designer, focusing on crafting visual stories across branding and consumer-focused design
-                    </p>
-                  </div>
+                  <span class="hero__title-word">NIKA</span>
+                  <span class="hero__title-word">SABLINA</span>
+                </div>
+                <div class="hero__caption-row">
+                  <p class="hero__caption hero__caption--left">
+                    Hi, I'm Nika, a russian designer that loves experimenting and archiving
+                  </p>
+                  <p class="hero__caption hero__caption--right">
+                    *Digital Designer, focusing on crafting visual stories across branding and consumer-focused design
+                  </p>
                 </div>
               </h1>
             </div>
@@ -90,17 +88,11 @@ function fitHeroTitle() {
     const container = row.parentElement;
     if (!container) return;
 
-    const isStacked = getComputedStyle(row).flexDirection === "column";
-    if (isStacked) {
-      row.style.fontSize = "";
-      return;
-    }
-
     const available = container.clientWidth;
     const words = row.querySelectorAll(".hero__title-word");
     const gap = parseFloat(getComputedStyle(row).columnGap || getComputedStyle(row).gap) || 0;
 
-    let lo = 24;
+    let lo = 16;
     let hi = available;
 
     while (hi - lo > 0.5) {
