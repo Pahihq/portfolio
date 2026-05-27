@@ -311,7 +311,7 @@ ul {
   min-width: 84px;
   min-height: 84px;
   padding: 20px 26px;
-  border: 1.5px solid var(--color-text);
+  border: 2px solid rgba(255, 255, 255, 0.92);
   border-radius: 20px;
   background: var(--color-bg);
   color: var(--color-text);
@@ -328,6 +328,15 @@ ul {
 .hero-badge-chip__label {
   display: block;
   line-height: 1;
+}
+
+[data-theme="light"] .hero-badge-chip {
+  border-color: rgba(0, 0, 0, 0.82);
+}
+
+.hero-badge-chip--round {
+  border-radius: 999px;
+  padding-inline: 28px;
 }
 
 .hero-badge-chip--icon {
