@@ -2,7 +2,6 @@ import { site, paths } from "./data.js";
 
 const navItems = [
   { label: "ABOUT", href: paths.about, id: "about" },
-  { label: "ARCHIVE", href: paths.archive, id: "archive" },
   { label: "CONTACT", href: paths.contact, id: "contact" },
 ];
 

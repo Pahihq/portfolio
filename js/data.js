@@ -15,7 +15,6 @@ export const paths = {
   about: `${base}#about`,
   contact: `${base}#contact`,
   works: `${base}#works`,
-  archive: `${base}playground.html`,
   notFound: `${base}404.html`,
   project: (slug) => `${base}${slug}/`,
 };
@@ -143,27 +142,6 @@ export const projects = {
     images: ["https://framerusercontent.com/images/4eFUbfz34UeMdxrRdgsKh0HVgg.png?width=4480&height=3360", "https://framerusercontent.com/images/ODFwD6uNV7Wun13mfd4uCm5RzD0.png?width=2200&height=1652", "https://framerusercontent.com/images/BnwfhUJAgKIW6vulZdpEkFhq9AI.png?width=2200&height=1652", "https://framerusercontent.com/images/zYrE4F40438nOc3nWSDTdBvUfI.png?width=1405&height=897", "https://framerusercontent.com/images/z1aZePpDRi3imk95fU1rtoYXZA.png?width=4000&height=3000", "https://framerusercontent.com/images/aPJsiHzRistRwYPaRf7TM6KESw.png?width=4500&height=3000", "https://framerusercontent.com/images/JIYNo7gHGKyNELnnhz5TpjJme4.png?width=3000&height=2200", "https://framerusercontent.com/images/faLnn8PRFgH3JNZhHX2Tnkybc.png?width=4000&height=3000", "https://framerusercontent.com/images/oYxNqPFQygZEDjqLfKliUGy95c.png?width=4000&height=3000"],
   },
 };
-
-export const playgroundItems = [
-  { title: "Majestik 01", image: "https://framerusercontent.com/images/N0hQbWHemAkE5hWiTkKlj0xhrU.png" },
-  { title: "Dream", image: "https://framerusercontent.com/images/7CsQtBNYwCXvLi5sWn4gV7wTATs.png" },
-  { title: "Type Architecture", image: "https://framerusercontent.com/images/STOAqkQAYGu3ZMf3TP9FMIEpuk.png" },
-  { title: "Meta Spidy", image: "https://framerusercontent.com/images/7BXbpEtaVyXp8NLISAkorQskszQ.png" },
-  { title: "No Longer Human", image: "https://framerusercontent.com/images/Mm80opTzXX0oTxEk5f2ubtds7o.png" },
-  { title: "Make Your Holiday", image: "https://framerusercontent.com/images/WG13q9Gps15r8lLb0Mp06UA8N4.png" },
-  { title: "Majestik 02", image: "https://framerusercontent.com/images/Com7xAqQ5ujU9Tk47vjQblJjd4.png" },
-  { title: "Garamond Poster", image: "https://framerusercontent.com/images/c7adxIWGqJzvXRzG2vsJ0Na8A.png" },
-  { title: "Save", image: "https://framerusercontent.com/images/pwLqFjS21ASZDLpk4qd1WnthCxk.png" },
-  { title: "Ink Marks", image: "https://framerusercontent.com/images/Nz66jQhkJ6LXsb0grHxdVAnUuMk.png" },
-  { title: "Glitch", image: "https://framerusercontent.com/images/XCRetOsmAUIu8amiY8iSuXeWscA.png" },
-  { title: "Free Form", image: "https://framerusercontent.com/images/mbw27irQBG9gUgn6UTl1wOqLXM.png" },
-  { title: "Majestik 03", image: "https://framerusercontent.com/images/B7eCbwfko6Z63VjsNyTt4ICmE.png" },
-  { title: "New Cell Discoveries", image: "https://framerusercontent.com/images/YbW2SMDu7FEMcvFbzcnbbgUIDdA.png" },
-  { title: "I Wanna Know", image: "https://framerusercontent.com/images/KaSOSRSGqntzvaFSp38rTvI70.png" },
-  { title: "Kitty Book", image: "https://framerusercontent.com/images/fhHigzniCJLENSkzjOCxSwq6CZA.png" },
-  { title: "Moon", image: "https://framerusercontent.com/images/MH2EucYmMEQ38D2ELh41KHwHUk.png" },
-  { title: "MyRISD", image: "https://framerusercontent.com/images/TR1VrbwLrat8dHMwrSKJ6UBdTRk.png" },
-];
 
 export function getAdjacentProjects(slug) {
   const slugs = works.map((w) => w.slug);
