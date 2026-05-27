@@ -60,16 +60,19 @@ export function renderHeroBadges() {
 export function renderFooter() {
   return `
     <footer class="footer" id="contact">
-      <div class="container container--content">
+      <div class="footer__inner">
         <h2 class="footer__heading">LET'S GET IN TOUCH :)</h2>
-        <div class="footer__socials">
-          <a class="social-btn" href="${site.linkedin}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a class="social-btn" href="${site.instagram}" target="_blank" rel="noopener noreferrer">Instagram</a>
-          <button class="social-btn" id="email-btn" type="button" data-email="${site.email}">Email</button>
+
+        <div class="footer__center">
+          <div class="footer__socials">
+            <a class="social-btn" href="${site.linkedin}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a class="social-btn" href="${site.instagram}" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <button class="social-btn" id="email-btn" type="button" data-email="${site.email}">Email</button>
+          </div>
+          <button class="footer__top" id="scroll-top-btn" type="button" aria-label="Back to top">↑</button>
         </div>
-        <div class="footer__bottom">
-          <span class="clock" id="clock" aria-live="polite"></span>
-        </div>
+
+        <span class="footer__clock clock" id="clock" aria-live="polite"></span>
       </div>
     </footer>
   `;
@@ -99,6 +102,7 @@ export function initCommon() {
   initThemeSwitcher();
   initClock();
   initEmailCopy();
+  initScrollToTop();
   initScrollAnimations();
 }
 
@@ -136,6 +140,20 @@ function initEmailCopy() {
     } catch {
       window.location.href = `mailto:${email}`;
     }
+  });
+}
+
+function initScrollToTop() {
+  const btn = document.getElementById("scroll-top-btn");
+  if (!btn) return;
+
+  btn.addEventListener("click", () => {
+    const home = document.getElementById("home");
+    if (home) {
+      home.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
 
