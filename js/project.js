@@ -1,10 +1,10 @@
-import { projects, getAdjacentProjects } from "./data.js";
+import { projects, getAdjacentProjects, paths } from "./data.js";
 import { renderHeader, renderFooter, initCommon } from "./components.js";
 
 export function initProjectPage(slug) {
   const project = projects[slug];
   if (!project) {
-    window.location.href = "/404.html";
+    window.location.href = paths.notFound;
     return;
   }
 
@@ -21,7 +21,7 @@ export function initProjectPage(slug) {
     .join("");
 
   const nextLink = next
-    ? `<a class="project-nav__link" href="/${next}/">NEXT PROJECT →</a>`
+    ? `<a class="project-nav__link" href="${paths.project(next)}">NEXT PROJECT →</a>`
     : "<span></span>";
 
   document.body.innerHTML = `
@@ -30,9 +30,9 @@ export function initProjectPage(slug) {
       <main>
         <section class="project-hero container container--content">
           <nav class="breadcrumb" aria-label="Breadcrumb">
-            <a href="/">Home</a>
+            <a href="${paths.home}">Home</a>
             <span class="breadcrumb__sep">/</span>
-            <a href="/#works">Works</a>
+            <a href="${paths.works}">Works</a>
             <span class="breadcrumb__sep">/</span>
             <span>${project.displayTitle}</span>
           </nav>
@@ -55,7 +55,7 @@ export function initProjectPage(slug) {
         </section>
         <section class="project-gallery container container--content">${galleryHtml}</section>
         <div class="container container--content project-nav">
-          <a class="project-nav__link" href="/">← BACK TO HOME</a>
+          <a class="project-nav__link" href="${paths.home}">← BACK TO HOME</a>
           ${nextLink}
         </div>
       </main>

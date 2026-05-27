@@ -1,4 +1,4 @@
-import { works } from "./data.js";
+import { works, paths } from "./data.js";
 import {
   renderHeroNav,
   renderFooter,
@@ -9,7 +9,7 @@ import { initHeroBadges } from "./hero-badges.js";
 function renderWorkCard(work) {
   return `
     <article class="fade-in">
-      <a class="work-card" href="/${work.slug}/">
+      <a class="work-card" href="${paths.project(work.slug)}">
         <div class="work-card__media">
           <img
             class="work-card__image"
@@ -74,8 +74,8 @@ function renderHome() {
   `;
 
   initCommon();
-  fitHeroTitle();
   initHeroBadges();
+  fitHeroTitle();
 }
 
 /** Масштабирует NIKA SABLINA на всю ширину экрана */

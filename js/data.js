@@ -7,6 +7,19 @@ export const site = {
   telegram: "https://t.me/N6Ssa",
 };
 
+const base = import.meta.env.BASE_URL;
+
+/** Внутренние пути сайта (GitHub Pages: /portfolio/) */
+export const paths = {
+  home: base,
+  about: `${base}#about`,
+  contact: `${base}#contact`,
+  works: `${base}#works`,
+  archive: `${base}playground.html`,
+  notFound: `${base}404.html`,
+  project: (slug) => `${base}${slug}/`,
+};
+
 export const marqueeWords = ["DIVERSE", "DESIGNER", "MULTIDISCIPLINARY", "RUSSIA"];
 
 export const works = [

@@ -73,7 +73,12 @@ const getChipVisualBounds = (chip) => {
 
 const chipOverlapsText = (chip, bounds) => {
   const visual = getChipVisualBounds(chip);
-  return visual.bottom > bounds.textTop && visual.top < bounds.textBottom;
+  return (
+    visual.bottom > bounds.textTop &&
+    visual.top < bounds.textBottom &&
+    visual.right > bounds.textLeft &&
+    visual.left < bounds.textRight
+  );
 };
 
 /** Инициализация физики и перетаскивания бейджей */
@@ -114,34 +119,44 @@ export function initHeroBadges() {
     const words = titleRow.querySelectorAll(".hero__title-word");
     let textTop = Infinity;
     let textBottom = -Infinity;
+    let textLeft = Infinity;
+    let textRight = -Infinity;
 
     words.forEach((word) => {
       const rect = word.getBoundingClientRect();
       textTop = Math.min(textTop, rect.top);
       textBottom = Math.max(textBottom, rect.bottom);
+      textLeft = Math.min(textLeft, rect.left);
+      textRight = Math.max(textRight, rect.right);
     });
 
     if (!Number.isFinite(textTop)) {
       const titleRect = titleRow.getBoundingClientRect();
       textTop = titleRect.top;
       textBottom = titleRect.bottom;
+      textLeft = titleRect.left;
+      textRight = titleRect.right;
     }
 
     const captionRow = titleRow.parentElement?.querySelector(".hero__caption-row");
     if (captionRow) {
       const captionRect = captionRow.getBoundingClientRect();
       textBottom = Math.max(textBottom, captionRect.bottom);
+      textLeft = Math.min(textLeft, captionRect.left);
+      textRight = Math.max(textRight, captionRect.right);
     }
 
     return {
       textTop: textTop - stageRect.top,
       textBottom: textBottom - stageRect.top,
+      textLeft: textLeft - stageRect.left,
+      textRight: textRight - stageRect.left,
     };
   };
 
   const getBounds = () => {
     const stageRect = getStageRect();
-    const { textTop, textBottom } = getHeroTextZone();
+    const { textTop, textBottom, textLeft, textRight } = getHeroTextZone();
     const isMobile = stageRect.width <= MOBILE_WIDTH;
     const titleGap = isMobile ? MOBILE_TITLE_GAP : TITLE_GAP;
 
@@ -150,6 +165,8 @@ export function initHeroBadges() {
       height: stageRect.height,
       textTop,
       textBottom,
+      textLeft,
+      textRight,
       wordsTop: textTop,
       wordsBottom: textBottom,
       wordHeight: Math.max(textBottom - textTop, 1),
@@ -182,6 +199,11 @@ export function initHeroBadges() {
       chip.h = chip.el.offsetHeight;
     });
   };
+
+  const hasValidLayout = () =>
+    state.every((chip) => chip.w > 0 && chip.h > 0) &&
+    getStageRect().width > 0 &&
+    getStageRect().height > 0;
 
   const scatterAbove = () => {
     const bounds = getBounds();
@@ -446,18 +468,30 @@ export function initHeroBadges() {
     startLoop();
   };
 
+  const waitForLayout = (attempt = 0) => {
+    layoutSizes();
+    if (hasValidLayout() || attempt >= 12) {
+      dropIn();
+      return;
+    }
+    requestAnimationFrame(() => waitForLayout(attempt + 1));
+  };
+
   const relayout = () => {
     layoutSizes();
     const bounds = getBounds();
     state.forEach((chip) => {
       clampChipAboveTitle(chip, bounds);
       updateChipLayer(chip, bounds);
+      applyTransform(chip);
     });
     settleFrames = 0;
     startLoop();
   };
 
-  dropIn();
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => waitForLayout());
+  });
 
   window.addEventListener("resize", relayout);
   window.addEventListener("hero-title-fit", relayout);

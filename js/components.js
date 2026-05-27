@@ -1,9 +1,9 @@
-import { site } from "./data.js";
+import { site, paths } from "./data.js";
 
 const navItems = [
-  { label: "ABOUT", href: "/#about", id: "about" },
-  { label: "ARCHIVE", href: "/playground.html", id: "archive" },
-  { label: "CONTACT", href: "/#contact", id: "contact" },
+  { label: "ABOUT", href: paths.about, id: "about" },
+  { label: "ARCHIVE", href: paths.archive, id: "archive" },
+  { label: "CONTACT", href: paths.contact, id: "contact" },
 ];
 
 function renderNavLinks(activePage = "", linkClass = "nav__link") {
@@ -30,7 +30,7 @@ export function renderThemeSwitcher() {
 export function renderHeroNav() {
   return `
     <nav class="hero-nav" aria-label="Main navigation">
-      <a class="hero-nav__logo" href="/">${site.name}</a>
+      <a class="hero-nav__logo" href="${paths.home}">${site.name}</a>
       <div class="hero-nav__links">${renderNavLinks("", "hero-nav__link")}</div>
       ${renderThemeSwitcher()}
     </nav>
@@ -42,7 +42,7 @@ export function renderHeader(activePage = "") {
   return `
     <header class="header" id="header">
       <div class="container container--content header__inner">
-        <a class="logo" href="/">${site.name}</a>
+        <a class="logo" href="${paths.home}">${site.name}</a>
         <nav class="nav" aria-label="Main navigation">${renderNavLinks(activePage)}</nav>
         ${renderThemeSwitcher()}
       </div>
