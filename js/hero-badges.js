@@ -24,11 +24,27 @@ const MAX_VY_INTRO = 2.2;
 const SMOOTH = 0.2;
 const SMOOTH_INTRO = 0.14;
 const THROW_DAMPING = 0.52;
+const MOBILE_WIDTH = 600;
+const MOBILE_TITLE_GAP = 16;
+const ROTATION_AIR = 0.988;
+const ROTATION_BOUNCE = 0.72;
+const REST_ANGULAR = 0.04;
+const MAX_VA = 12;
+const TORQUE = 0.022;
+const DRAG_TORQUE = 0.18;
 
 const clampVelocity = (chip, intro = false) => {
   const maxVy = intro ? MAX_VY_INTRO : MAX_VY;
   chip.vx = Math.max(-MAX_VX, Math.min(MAX_VX, chip.vx));
   chip.vy = Math.max(-maxVy, Math.min(maxVy, chip.vy));
+  chip.va = Math.max(-MAX_VA, Math.min(MAX_VA, chip.va));
+};
+
+const normalizeAngleDelta = (delta) => {
+  let value = delta;
+  while (value > 180) value -= 360;
+  while (value < -180) value += 360;
+  return value;
 };
 
 /** Инициализация физики и перетаскивания бейджей */
@@ -88,6 +104,10 @@ export function initHeroBadges() {
     const fieldRect = field.getBoundingClientRect();
     const words = getTitleWordsRect();
     const wordHeight = Math.max(words.bottom - words.top, 1);
+    const isMobile = fieldRect.width <= MOBILE_WIDTH;
+    const titleSafeBottom = isMobile
+      ? words.top - MOBILE_TITLE_GAP
+      : words.top + wordHeight * 0.1;
 
     return {
       width: fieldRect.width,
@@ -95,9 +115,18 @@ export function initHeroBadges() {
       wordsTop: words.top,
       wordsBottom: words.bottom,
       wordHeight,
-      // линия приземления — слегка на верхний край NIKA / SABLINA
-      landingLine: words.top + wordHeight * 0.1,
+      isMobile,
+      titleSafeBottom,
+      landingLine: titleSafeBottom,
     };
+  };
+
+  const clampChipAboveTitle = (chip, bounds) => {
+    const maxY = bounds.titleSafeBottom - chip.h;
+    if (chip.y > maxY) {
+      chip.y = maxY;
+      if (chip.vy > 0) chip.vy = 0;
+    }
   };
 
   const layoutSizes = () => {
@@ -116,6 +145,9 @@ export function initHeroBadges() {
       chip.displayY = chip.y;
       chip.vx = (Math.random() - 0.5) * 3.5;
       chip.vy = Math.random() * 0.45;
+      chip.angle = (Math.random() - 0.5) * 40;
+      chip.displayAngle = chip.angle;
+      chip.va = (Math.random() - 0.5) * 2.5;
       chip.dropDelay = Math.floor(Math.random() * 38);
       chip.introDrop = true;
       chip.dragging = false;
@@ -126,13 +158,30 @@ export function initHeroBadges() {
     if (chip.dragging) {
       chip.displayX = chip.x;
       chip.displayY = chip.y;
+      chip.displayAngle = chip.angle;
     } else {
       const smooth = chip.introDrop ? SMOOTH_INTRO : SMOOTH;
       chip.displayX += (chip.x - chip.displayX) * smooth;
       chip.displayY += (chip.y - chip.displayY) * smooth;
+      chip.displayAngle += (chip.angle - chip.displayAngle) * smooth;
     }
 
-    chip.el.style.transform = `translate3d(${chip.displayX}px, ${chip.displayY}px, 0)`;
+    chip.el.style.transformOrigin = "center center";
+    const pivotX = chip.displayX + chip.w / 2;
+    const pivotY = chip.displayY + chip.h / 2;
+    chip.el.style.transform = `translate3d(${pivotX}px, ${pivotY}px, 0) rotate(${chip.displayAngle}deg) translate3d(${-chip.w / 2}px, ${-chip.h / 2}px, 0)`;
+  };
+
+  const applyDragTorque = (chip, prevX, prevY, nextX, nextY) => {
+    const cx = chip.x + chip.w / 2;
+    const cy = chip.y + chip.h / 2;
+    const dx = nextX - prevX;
+    const dy = nextY - prevY;
+    const rx = cx - (prevX + chip.w / 2);
+    const ry = cy - (prevY + chip.h / 2);
+    chip.va += (rx * dy - ry * dx) * DRAG_TORQUE;
+    chip.angle += chip.va * 0.35;
+    clampVelocity(chip);
   };
 
   const stepChip = (chip, bounds) => {
@@ -149,16 +198,20 @@ export function initHeroBadges() {
     const air = intro ? AIR_INTRO : AIR;
     chip.vx *= air;
     chip.vy *= air;
+    chip.va *= ROTATION_AIR;
     chip.x += chip.vx;
     chip.y += chip.vy;
+    chip.angle += chip.va;
     clampVelocity(chip, intro);
 
     if (chip.x < 0) {
       chip.x = 0;
       chip.vx *= -(intro ? BOUNCE_INTRO : BOUNCE);
+      chip.va += chip.vy * TORQUE;
     } else if (chip.x + chip.w > bounds.width) {
       chip.x = bounds.width - chip.w;
       chip.vx *= -(intro ? BOUNCE_INTRO : BOUNCE);
+      chip.va -= chip.vy * TORQUE;
     }
 
     const floor = bounds.landingLine - chip.h;
@@ -168,24 +221,30 @@ export function initHeroBadges() {
       if (Math.abs(chip.vy) > REST_VELOCITY) {
         chip.vy *= -bounce;
         chip.vx *= FRICTION;
+        chip.va += chip.vx * TORQUE * 2.4;
       } else {
         chip.vy = 0;
         chip.vx *= 0.92;
+        chip.va *= ROTATION_BOUNCE;
         if (intro) chip.introDrop = false;
       }
     }
 
-    const minY = bounds.wordsTop - chip.h * 0.5;
+    const minY = bounds.isMobile ? bounds.wordsTop - chip.h * 2.5 : bounds.wordsTop - chip.h * 0.5;
     if (chip.y < minY && !chip.dragging) {
       chip.y = minY;
       if (chip.vy < 0) chip.vy *= -BOUNCE * 0.5;
     }
 
+    clampChipAboveTitle(chip, bounds);
+
     return (
       Math.abs(chip.vx) > REST_VELOCITY ||
       Math.abs(chip.vy) > REST_VELOCITY ||
+      Math.abs(chip.va) > REST_ANGULAR ||
       Math.abs(chip.x - chip.displayX) > 0.08 ||
-      Math.abs(chip.y - chip.displayY) > 0.08
+      Math.abs(chip.y - chip.displayY) > 0.08 ||
+      Math.abs(chip.angle - chip.displayAngle) > 0.08
     );
   };
 
@@ -213,6 +272,10 @@ export function initHeroBadges() {
       resolveCollisions();
     }
 
+    state.forEach((chip) => {
+      clampChipAboveTitle(chip, bounds);
+    });
+
     // при перетаскивании — не даём провалиться сквозь другие блоки
     state.forEach((chip) => {
       if (!chip.dragging) return;
@@ -221,6 +284,7 @@ export function initHeroBadges() {
           if (other !== chip) separate(chip, other);
         });
       }
+      clampChipAboveTitle(chip, bounds);
     });
 
     state.forEach(applyTransform);
@@ -251,6 +315,11 @@ export function initHeroBadges() {
     chip.offsetY = event.clientY - fieldRect.top - chip.y;
     chip.vx = 0;
     chip.vy = 0;
+    chip.va = 0;
+    chip.spinPointerAngle = Math.atan2(
+      event.clientY - fieldRect.top - (chip.y + chip.h / 2),
+      event.clientX - fieldRect.left - (chip.x + chip.w / 2)
+    );
 
     startLoop();
   };
@@ -259,6 +328,8 @@ export function initHeroBadges() {
     if (!chip.dragging || event.pointerId !== activePointer) return;
 
     const fieldRect = field.getBoundingClientRect();
+    const prevX = chip.x;
+    const prevY = chip.y;
     const nextX = event.clientX - fieldRect.left - chip.offsetX;
     const nextY = event.clientY - fieldRect.top - chip.offsetY;
 
@@ -266,6 +337,20 @@ export function initHeroBadges() {
     chip.vy = chip.vy * 0.55 + (nextY - chip.y) * 0.38;
     chip.x = nextX;
     chip.y = nextY;
+
+    const cx = chip.x + chip.w / 2;
+    const cy = chip.y + chip.h / 2;
+    const pointerAngle = Math.atan2(
+      event.clientY - fieldRect.top - cy,
+      event.clientX - fieldRect.left - cx
+    );
+    const spinDelta = normalizeAngleDelta((pointerAngle - chip.spinPointerAngle) * (180 / Math.PI));
+    chip.angle += spinDelta;
+    chip.va = chip.va * 0.45 + spinDelta * 0.55;
+    chip.spinPointerAngle = pointerAngle;
+
+    applyDragTorque(chip, prevX, prevY, nextX, nextY);
+    clampChipAboveTitle(chip, getBounds());
     clampVelocity(chip);
     applyTransform(chip);
   };
@@ -279,6 +364,7 @@ export function initHeroBadges() {
 
     chip.vx *= THROW_DAMPING;
     chip.vy *= THROW_DAMPING;
+    chip.va *= THROW_DAMPING + 0.18;
 
     if (Math.hypot(chip.vx, chip.vy) < 0.5) {
       chip.vx = (Math.random() - 0.5) * 1.5;
@@ -306,6 +392,8 @@ export function initHeroBadges() {
 
   const relayout = () => {
     layoutSizes();
+    const bounds = getBounds();
+    state.forEach((chip) => clampChipAboveTitle(chip, bounds));
     settleFrames = 0;
     startLoop();
   };
@@ -328,13 +416,17 @@ function createChipState(el, index) {
     y: 0,
     displayX: 0,
     displayY: 0,
+    angle: 0,
+    displayAngle: 0,
     vx: 0,
     vy: 0,
+    va: 0,
     w: 0,
     h: 0,
     dragging: false,
     offsetX: 0,
     offsetY: 0,
+    spinPointerAngle: 0,
     dropDelay: 0,
     introDrop: false,
   };
@@ -364,12 +456,18 @@ function separate(a, b) {
         b.x += push;
         a.vx -= push * COLLISION_IMPULSE;
         b.vx += push * COLLISION_IMPULSE;
+        a.va += push * COLLISION_IMPULSE * 4;
+        b.va -= push * COLLISION_IMPULSE * 4;
       } else {
         a.x += push;
         b.x -= push;
         a.vx += push * COLLISION_IMPULSE;
         b.vx -= push * COLLISION_IMPULSE;
+        a.va -= push * COLLISION_IMPULSE * 4;
+        b.va += push * COLLISION_IMPULSE * 4;
       }
+      clampVelocity(a);
+      clampVelocity(b);
     }
     return;
   }
@@ -394,7 +492,10 @@ function separate(a, b) {
     const bounce = upper.introDrop ? BOUNCE_INTRO : BOUNCE;
     upper.vy *= -bounce * 0.45;
     upper.vx += lower.vx * 0.08;
+    upper.va += (upper.vx - lower.vx) * TORQUE * 3;
+    lower.va += lower.vx * TORQUE;
     clampVelocity(upper, upper.introDrop);
+    clampVelocity(lower, lower.introDrop);
 
     if (upper.introDrop && Math.abs(upper.vy) < REST_VELOCITY * 3) {
       upper.introDrop = false;
