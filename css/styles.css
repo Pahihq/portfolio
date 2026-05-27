@@ -389,8 +389,8 @@ ul {
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 0.38em;
+  justify-content: flex-start;
+  gap: 0.12em;
   width: 100%;
   font-family: var(--font-display);
   font-weight: 500;
@@ -984,8 +984,8 @@ ul {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: baseline;
-    justify-content: space-between;
-    gap: 0.28em;
+    justify-content: flex-start;
+    gap: 0.1em;
   }
 
   .hero__caption-row {

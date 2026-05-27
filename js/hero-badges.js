@@ -25,7 +25,8 @@ const SMOOTH = 0.2;
 const SMOOTH_INTRO = 0.14;
 const THROW_DAMPING = 0.52;
 const MOBILE_WIDTH = 600;
-const MOBILE_TITLE_GAP = 16;
+const TITLE_GAP = 14;
+const MOBILE_TITLE_GAP = 18;
 const ROTATION_AIR = 0.988;
 const ROTATION_BOUNCE = 0.72;
 const REST_ANGULAR = 0.04;
@@ -46,6 +47,14 @@ const normalizeAngleDelta = (delta) => {
   while (value < -180) value += 360;
   return value;
 };
+
+const getRotatedHalfHeight = (chip) => {
+  const rad = (chip.angle * Math.PI) / 180;
+  return (Math.abs(Math.sin(rad)) * chip.w + Math.abs(Math.cos(rad)) * chip.h) / 2;
+};
+
+const getMaxChipY = (chip, bounds) =>
+  bounds.textTop - bounds.titleGap - chip.h / 2 - getRotatedHalfHeight(chip);
 
 /** Инициализация физики и перетаскивания бейджей */
 export function initHeroBadges() {
@@ -76,53 +85,59 @@ export function initHeroBadges() {
   let activePointer = null;
   let settleFrames = 0;
 
-  const getTitleWordsRect = () => {
+  const getHeroTextZone = () => {
     const fieldRect = field.getBoundingClientRect();
     const words = titleRow.querySelectorAll(".hero__title-word");
-    let top = Infinity;
-    let bottom = -Infinity;
+    let textTop = Infinity;
+    let textBottom = -Infinity;
 
     words.forEach((word) => {
       const rect = word.getBoundingClientRect();
-      top = Math.min(top, rect.top);
-      bottom = Math.max(bottom, rect.bottom);
+      textTop = Math.min(textTop, rect.top);
+      textBottom = Math.max(textBottom, rect.bottom);
     });
 
-    if (!Number.isFinite(top)) {
+    if (!Number.isFinite(textTop)) {
       const titleRect = titleRow.getBoundingClientRect();
-      top = titleRect.top;
-      bottom = titleRect.top + titleRect.height * 0.55;
+      textTop = titleRect.top;
+      textBottom = titleRect.bottom;
+    }
+
+    const captionRow = titleRow.parentElement?.querySelector(".hero__caption-row");
+    if (captionRow) {
+      const captionRect = captionRow.getBoundingClientRect();
+      textBottom = Math.max(textBottom, captionRect.bottom);
     }
 
     return {
-      top: top - fieldRect.top,
-      bottom: bottom - fieldRect.top,
+      textTop: textTop - fieldRect.top,
+      textBottom: textBottom - fieldRect.top,
     };
   };
 
   const getBounds = () => {
     const fieldRect = field.getBoundingClientRect();
-    const words = getTitleWordsRect();
-    const wordHeight = Math.max(words.bottom - words.top, 1);
+    const { textTop, textBottom } = getHeroTextZone();
     const isMobile = fieldRect.width <= MOBILE_WIDTH;
-    const titleSafeBottom = isMobile
-      ? words.top - MOBILE_TITLE_GAP
-      : words.top + wordHeight * 0.1;
+    const titleGap = isMobile ? MOBILE_TITLE_GAP : TITLE_GAP;
 
     return {
       width: fieldRect.width,
       height: fieldRect.height,
-      wordsTop: words.top,
-      wordsBottom: words.bottom,
-      wordHeight,
+      textTop,
+      textBottom,
+      wordsTop: textTop,
+      wordsBottom: textBottom,
+      wordHeight: Math.max(textBottom - textTop, 1),
       isMobile,
-      titleSafeBottom,
-      landingLine: titleSafeBottom,
+      titleGap,
+      titleSafeBottom: textTop - titleGap,
+      landingLine: textTop - titleGap,
     };
   };
 
   const clampChipAboveTitle = (chip, bounds) => {
-    const maxY = bounds.titleSafeBottom - chip.h;
+    const maxY = getMaxChipY(chip, bounds);
     if (chip.y > maxY) {
       chip.y = maxY;
       if (chip.vy > 0) chip.vy = 0;
@@ -140,7 +155,7 @@ export function initHeroBadges() {
     const bounds = getBounds();
     state.forEach((chip) => {
       chip.x = Math.random() * Math.max(bounds.width - chip.w - 16, 1) + 8;
-      chip.y = bounds.wordsTop - chip.h - 60 - Math.random() * 480;
+      chip.y = bounds.textTop - chip.h - bounds.titleGap - 60 - Math.random() * 480;
       chip.displayX = chip.x;
       chip.displayY = chip.y;
       chip.vx = (Math.random() - 0.5) * 3.5;
@@ -203,6 +218,7 @@ export function initHeroBadges() {
     chip.y += chip.vy;
     chip.angle += chip.va;
     clampVelocity(chip, intro);
+    clampChipAboveTitle(chip, bounds);
 
     if (chip.x < 0) {
       chip.x = 0;
@@ -214,7 +230,7 @@ export function initHeroBadges() {
       chip.va -= chip.vy * TORQUE;
     }
 
-    const floor = bounds.landingLine - chip.h;
+    const floor = getMaxChipY(chip, bounds);
     if (chip.y > floor) {
       chip.y = floor;
       const bounce = intro ? BOUNCE_INTRO : BOUNCE;
@@ -230,7 +246,7 @@ export function initHeroBadges() {
       }
     }
 
-    const minY = bounds.isMobile ? bounds.wordsTop - chip.h * 2.5 : bounds.wordsTop - chip.h * 0.5;
+    const minY = bounds.textTop - chip.h * 3.2 - getRotatedHalfHeight(chip);
     if (chip.y < minY && !chip.dragging) {
       chip.y = minY;
       if (chip.vy < 0) chip.vy *= -BOUNCE * 0.5;
