@@ -80,7 +80,7 @@ export const works = [
     thumb: dovlatovBookCover,
   },
   { slug: "alienography", title: "СКОМОРОХ", category: "Айдентика для циркового фестиваля", year: "2025", thumb: skomorokhCover },
-  { slug: "neighborhood-design", title: "FREEPIK", category: "Айдентика", year: "2024", thumb: "https://framerusercontent.com/images/5HCey7FmhzZJ3zXco9OZj6vdTQ.png?width=869&height=587" },
+  { slug: "neighborhood-design", title: "Измайловская библиотека", category: "Коллаборация · комиксы, книжная графика", year: "2026", thumb: "https://framerusercontent.com/images/5HCey7FmhzZJ3zXco9OZj6vdTQ.png?width=869&height=587" },
   { slug: "park-me", title: "ParkMe", category: "UI/UX дизайн", year: "2024", thumb: "https://framerusercontent.com/images/ERN1TeMEvWj67G7tRFH98Tbwhs.png?width=4000&height=3000" },
 ];
 
@@ -119,11 +119,15 @@ export const projects = {
     images: [skomorokhImage],
   },
   "neighborhood-design": {
-    displayTitle: "Neighborhood Design",
-    description: "В рамках проекта Freepik «Neighborhood Design» в Сан-Франциско я возглавила редизайн барбершопа Razo’s: новая айдентика, витрина, интерьер и мерч — чтобы бренд ближе говорил с жителями района Excelsior.",
-    year: "04/2024",
-    services: ["Ребрендинг"],
-    tools: ["Freepik AI", "Figma", "Photoshop", "Illustrator"],
+    displayTitle: "Измайловская библиотека",
+    breadcrumbTitle: "Измайловская библиотека",
+    subtitle: "Коллаборация с библиотекой комиксов и книжной графики",
+    description:
+      "Коллаборация с Измайловской библиотекой комиксов и книжной графики: полиграфия и мерч, связанные с миром комикса и книжного визуала.",
+    year: "2026",
+    servicesLabel: "Формат",
+    services: ["Полиграфия", "Мерч"],
+    tools: ["Figma", "Illustrator", "Photoshop"],
     images: ["https://framerusercontent.com/images/5HCey7FmhzZJ3zXco9OZj6vdTQ.png?width=869&height=587", "https://framerusercontent.com/images/8ZZRglZdBzkaL7l1q0bOKhbN0Vg.png?width=619&height=788", "https://framerusercontent.com/images/vlp3DbLuPeZc0UPt0PzwNY9PI.png?width=1708&height=957", "https://framerusercontent.com/images/zoeIOo1P2uTVt0hx9GPPI2DOybo.png?width=1740&height=1305", "https://framerusercontent.com/images/8UPgHBoRPXJQLo3kOGWee8AKqQ.png?width=1014&height=644", "https://framerusercontent.com/images/A1ciSZyEt8nVmIaSXEa1Mo8.png?width=1011&height=674", "https://framerusercontent.com/images/cGQy9MjdVE3nwps803qrtkvzk.png?width=1010&height=640", "https://framerusercontent.com/images/LL0qRpFm5XFZT4eoqp7CdEMo.png?width=1010&height=669", "https://framerusercontent.com/images/j2f1Ka7QJEtJI3Bn7g6FQP2pY0.png?width=1009&height=666", "https://framerusercontent.com/images/HJycv6kLHhHZ8eOVeAobpK20J0.png?width=1002&height=752", "https://framerusercontent.com/images/94BJA7jEerpmuYGoXcnobCfM.png?width=1001&height=749"],
   },
   "park-me": {
