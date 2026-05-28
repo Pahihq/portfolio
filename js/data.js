@@ -72,6 +72,8 @@ const skomorokhImage = `${base}images/skomorokh/skomorokh.jpg`;
 const skomorokhCover = `${base}images/skomorokh/skomorokh-cover.jpg`;
 const kollabaImage = `${base}images/kollaba/kollaba.jpg`;
 const kollabaCover = `${base}images/kollaba/kollaba-cover.jpg`;
+const journalImage = `${base}images/journal/journal.jpg`;
+const journalCover = `${base}images/journal/journal-cover.jpg`;
 
 export const works = [
   {
@@ -83,7 +85,7 @@ export const works = [
   },
   { slug: "alienography", title: "СКОМОРОХ", category: "Айдентика для циркового фестиваля", year: "2025", thumb: skomorokhCover },
   { slug: "neighborhood-design", title: "Измайловская библиотека", category: "Коллаборация · комиксы, книжная графика", year: "2026", thumb: kollabaCover },
-  { slug: "park-me", title: "ParkMe", category: "UI/UX дизайн", year: "2024", thumb: "https://framerusercontent.com/images/ERN1TeMEvWj67G7tRFH98Tbwhs.png?width=4000&height=3000" },
+  { slug: "park-me", title: "ОТ ГРАФФИТИ ДО ГАЛЕРЕИ", category: "Журнал / Вёрстка", year: "2025", thumb: journalCover },
 ];
 
 export const projects = {
@@ -133,12 +135,14 @@ export const projects = {
     images: [kollabaImage],
   },
   "park-me": {
-    displayTitle: "ParkMe",
-    description: "Приложение, которое помогает водителям быстро находить подходящие парковочные места рядом с пунктом назначения.",
-    year: "04/2024",
-    services: ["UI/UX дизайн"],
-    tools: ["Figma", "Illustrator"],
-    images: ["https://framerusercontent.com/images/ERN1TeMEvWj67G7tRFH98Tbwhs.png?width=4000&height=3000", "https://framerusercontent.com/images/nySa9HZpzOaWkmwSiDguCOaaqdY.png?width=2200&height=1652", "https://framerusercontent.com/images/RiErJOWzwcLlXqaOX76HZfdMCc.png?width=2200&height=1652", "https://framerusercontent.com/images/JDEs6rneJMdSKp5xOuSrWO07Fo.png?width=4480&height=3360", "https://framerusercontent.com/images/eiMinlL59dL4kA9aQVFv8yee7c.png?width=2200&height=1652", "https://framerusercontent.com/images/89qZxAxbiu5q4doeqtwJQSkcoE.png?width=2200&height=1652", "https://framerusercontent.com/images/bXFDtVB4IbUsEBWJWAjYGr8lFA.png?width=4480&height=3360", "https://framerusercontent.com/images/tjxtaSfpf6WEVog7qDu6RVqhQ0o.png?width=2200&height=1652", "https://framerusercontent.com/images/NJT87net5TyC34Ox55ACQprDs.png?width=2200&height=1652", "https://framerusercontent.com/images/A0g05ZNECttKHgHeOXrPovFKiY.png?width=4480&height=3360", "https://framerusercontent.com/images/PySqCpiYHr8qCYGB5Y383isA28.png?width=2200&height=1652", "https://framerusercontent.com/images/BCFsgKJv5lZDFiPOTaxo6mRiw.png?width=2200&height=1652"],
+    displayTitle: "ЖУРНАЛ «ОТ ГРАФФИТИ ДО ГАЛЕРЕИ»",
+    breadcrumbTitle: "От граффити до галереи",
+    description:
+      "Новый взгляд на стрит-арт — не как на вандализм, а как на форму современного искусства, бунта и манифеста.",
+    year: "2025",
+    services: ["Вёрстка"],
+    tools: ["Illustrator", "Photoshop", "InDesign"],
+    images: [journalImage],
   },
   "atoms": {
     displayTitle: "Atoms",
