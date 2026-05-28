@@ -19,7 +19,7 @@ export const ui = {
   },
   works: {
     title: "Избранные работы",
-    period: "2020 — 2026",
+    period: "2025 — 2026",
   },
   footer: {
     heading: "ДАВАЙ СВЯЖЕМСЯ :)",
