@@ -24,6 +24,7 @@ export function initProjectPage(slug) {
     ? `<a class="project-nav__link" href="${paths.project(next)}">${ui.project.nextProject}</a>`
     : "<span></span>";
 
+  const servicesLabel = project.servicesLabel || ui.project.services;
   const breadcrumbTitle = project.breadcrumbTitle || project.displayTitle;
   const subtitleHtml = project.subtitle
     ? `<p class="project-hero__subtitle fade-in">${project.subtitle}</p>`
@@ -64,7 +65,7 @@ export function initProjectPage(slug) {
               <p class="project-meta__value">${project.year}</p>
             </div>
             <div>
-              <p class="project-meta__label">${ui.project.services}</p>
+              <p class="project-meta__label">${servicesLabel}</p>
               <div class="project-meta__list project-meta__value">${servicesHtml}</div>
             </div>
             <div>
