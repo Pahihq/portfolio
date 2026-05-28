@@ -66,6 +66,7 @@ export const paths = {
 export const marqueeWords = ["МНОГОГРАННАЯ", "ДИЗАЙНЕР", "МУЛЬТИДИСЦИПЛИНАРНАЯ", "РОССИЯ"];
 
 const dovlatovBookImage = `${base}images/dovlatov-book.jpg`;
+const dovlatovBookCover = `${base}images/dovlatov-book-cover.jpg`;
 
 export const works = [
   {
@@ -73,7 +74,7 @@ export const works = [
     title: "Я СТАРАЛСЯ НО МЕНЯ НЕ НАПЕЧАТАЛИ",
     category: "Книжный дизайн / Вёрстка",
     year: "2026",
-    thumb: dovlatovBookImage,
+    thumb: dovlatovBookCover,
   },
   { slug: "alienography", title: "Alienography", category: "Шрифтовой дизайн", year: "2024", thumb: "https://framerusercontent.com/images/ZtdDLi6wtoob9NS6x2aRMi51cw.png?width=4480&height=3360" },
   { slug: "neighborhood-design", title: "FREEPIK", category: "Айдентика", year: "2024", thumb: "https://framerusercontent.com/images/5HCey7FmhzZJ3zXco9OZj6vdTQ.png?width=869&height=587" },
