@@ -139,6 +139,12 @@ ul {
   border-bottom: 1px solid var(--color-border);
 }
 
+.page--project .header {
+  position: relative;
+  top: auto;
+  z-index: auto;
+}
+
 .header__inner {
   display: grid;
   grid-template-columns: 1fr auto 1fr;

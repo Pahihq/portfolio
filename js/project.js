@@ -45,7 +45,7 @@ export function initProjectPage(slug) {
     : "";
 
   document.body.innerHTML = `
-    <div class="page">
+    <div class="page page--project">
       ${renderHeader()}
       <main>
         <section class="project-hero container container--content">
@@ -86,4 +86,8 @@ export function initProjectPage(slug) {
   `;
 
   initCommon();
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+  window.scrollTo(0, 0);
 }
