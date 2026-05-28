@@ -68,6 +68,8 @@ export const marqueeWords = ["МНОГОГРАННАЯ", "ДИЗАЙНЕР", "М
 
 const dovlatovBookImage = `${base}images/dovlatov-book.jpg`;
 const dovlatovBookCover = `${base}images/dovlatov-book-cover.jpg`;
+const skomorokhImage = `${base}images/skomorokh/skomorokh.jpg`;
+const skomorokhCover = `${base}images/skomorokh/skomorokh-cover.jpg`;
 
 export const works = [
   {
@@ -77,7 +79,7 @@ export const works = [
     year: "2026",
     thumb: dovlatovBookCover,
   },
-  { slug: "alienography", title: "СКОМОРОХ", category: "Айдентика для циркового фестиваля", year: "2025", thumb: "https://framerusercontent.com/images/ZtdDLi6wtoob9NS6x2aRMi51cw.png?width=4480&height=3360" },
+  { slug: "alienography", title: "СКОМОРОХ", category: "Айдентика для циркового фестиваля", year: "2025", thumb: skomorokhCover },
   { slug: "neighborhood-design", title: "FREEPIK", category: "Айдентика", year: "2024", thumb: "https://framerusercontent.com/images/5HCey7FmhzZJ3zXco9OZj6vdTQ.png?width=869&height=587" },
   { slug: "park-me", title: "ParkMe", category: "UI/UX дизайн", year: "2024", thumb: "https://framerusercontent.com/images/ERN1TeMEvWj67G7tRFH98Tbwhs.png?width=4000&height=3000" },
 ];
@@ -114,7 +116,7 @@ export const projects = {
     servicesLabel: "Формат",
     services: ["Айдентика", "Полиграфия", "Мерч"],
     tools: ["Figma", "Illustrator", "Photoshop"],
-    images: ["https://framerusercontent.com/images/ZtdDLi6wtoob9NS6x2aRMi51cw.png?width=4480&height=3360", "https://framerusercontent.com/images/eecb7ja6e6MgL1My4uYCpYXIg.png?width=2200&height=1652", "https://framerusercontent.com/images/JrFluiNkcoraVFimZcdv87zb3A.png?width=2200&height=1652", "https://framerusercontent.com/images/l5x5hx8RE20DHyKPKwd1p28loE8.png?width=4480&height=3360", "https://framerusercontent.com/images/hKps6vRvosDcQx2JfElFsoAEHTQ.png?width=1281&height=957", "https://framerusercontent.com/images/jCeN9vgCwnroaMg4bwLhWSiBLVw.png?width=4480&height=3360", "https://framerusercontent.com/images/Qf6EgzyseXWzpaSSh7bJfkd1Pa4.png?width=4480&height=3360", "https://framerusercontent.com/images/I6s4ruZ9jGFnB8r8I6I0FRtYT0.png?width=1278&height=954", "https://framerusercontent.com/images/eMgxmeEiTnZHB8QxhAOqCVE8Xo.png?width=2200&height=1652", "https://framerusercontent.com/images/H0jdJ47Amb2qNF1NgXqgVYK6IMk.png?width=2200&height=1652"],
+    images: [skomorokhImage],
   },
   "neighborhood-design": {
     displayTitle: "Neighborhood Design",
