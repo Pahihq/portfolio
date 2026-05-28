@@ -1,8 +1,8 @@
 const BADGES = [
-  { id: "diverse", label: "DIVERSE", kind: "text" },
-  { id: "designer", label: "DESIGNER", kind: "text" },
-  { id: "multidisciplinary", label: "MULTIDISCIPLINARY", kind: "text" },
-  { id: "russia", label: "RUSSIA", kind: "text" },
+  { id: "diverse", label: "МНОГОГРАННАЯ", kind: "text" },
+  { id: "designer", label: "ДИЗАЙНЕР", kind: "text" },
+  { id: "multidisciplinary", label: "МУЛЬТИДИСЦИПЛИНАРНАЯ", kind: "text" },
+  { id: "russia", label: "РОССИЯ", kind: "text" },
   { id: "star", label: "*", kind: "icon" },
   { id: "arrow", label: "↓", kind: "icon" },
 ];

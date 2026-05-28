@@ -1,4 +1,4 @@
-import { projects, getAdjacentProjects, paths } from "./data.js";
+import { projects, getAdjacentProjects, paths, ui } from "./data.js";
 import { renderHeader, renderFooter, initCommon } from "./components.js";
 
 export function initProjectPage(slug) {
@@ -9,7 +9,7 @@ export function initProjectPage(slug) {
   }
 
   const { prev, next } = getAdjacentProjects(slug);
-  document.title = `${project.displayTitle} — Nika Sablina`;
+  document.title = `${project.displayTitle} — Ника Саблина`;
 
   const servicesHtml = project.services.map((s) => `<span>${s}</span>`).join("");
   const toolsHtml = project.tools.map((t) => `<span>${t}</span>`).join("");
@@ -21,7 +21,7 @@ export function initProjectPage(slug) {
     .join("");
 
   const nextLink = next
-    ? `<a class="project-nav__link" href="${paths.project(next)}">NEXT PROJECT →</a>`
+    ? `<a class="project-nav__link" href="${paths.project(next)}">${ui.project.nextProject}</a>`
     : "<span></span>";
 
   document.body.innerHTML = `
@@ -29,10 +29,10 @@ export function initProjectPage(slug) {
       ${renderHeader()}
       <main>
         <section class="project-hero container container--content">
-          <nav class="breadcrumb" aria-label="Breadcrumb">
-            <a href="${paths.home}">Home</a>
+          <nav class="breadcrumb" aria-label="${ui.a11y.breadcrumb}">
+            <a href="${paths.home}">${ui.project.home}</a>
             <span class="breadcrumb__sep">/</span>
-            <a href="${paths.works}">Works</a>
+            <a href="${paths.works}">${ui.project.works}</a>
             <span class="breadcrumb__sep">/</span>
             <span>${project.displayTitle}</span>
           </nav>
@@ -40,22 +40,22 @@ export function initProjectPage(slug) {
           <p class="project-hero__description fade-in">${project.description}</p>
           <div class="project-meta fade-in">
             <div>
-              <p class="project-meta__label">Year</p>
+              <p class="project-meta__label">${ui.project.year}</p>
               <p class="project-meta__value">${project.year}</p>
             </div>
             <div>
-              <p class="project-meta__label">Services</p>
+              <p class="project-meta__label">${ui.project.services}</p>
               <div class="project-meta__list project-meta__value">${servicesHtml}</div>
             </div>
             <div>
-              <p class="project-meta__label">Tools</p>
+              <p class="project-meta__label">${ui.project.tools}</p>
               <div class="project-meta__list project-meta__value">${toolsHtml}</div>
             </div>
           </div>
         </section>
         <section class="project-gallery container container--content">${galleryHtml}</section>
         <div class="container container--content project-nav">
-          <a class="project-nav__link" href="${paths.home}">← BACK TO HOME</a>
+          <a class="project-nav__link" href="${paths.home}">${ui.project.backHome}</a>
           ${nextLink}
         </div>
       </main>

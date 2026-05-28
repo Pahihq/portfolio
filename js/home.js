@@ -1,4 +1,4 @@
-import { works, paths } from "./data.js";
+import { works, paths, ui, site } from "./data.js";
 import {
   renderHeroNav,
   renderFooter,
@@ -31,6 +31,7 @@ function renderWorkCard(work) {
 }
 
 function renderHome() {
+  document.title = site.title;
   const worksGrid = works.map(renderWorkCard).join("");
 
   document.body.innerHTML = `
@@ -49,10 +50,10 @@ function renderHome() {
                 </div>
                 <div class="hero__caption-row">
                   <p class="hero__caption hero__caption--left">
-                    Hi, I'm Nika, a russian designer that loves experimenting and archiving
+                    ${ui.hero.captionLeft}
                   </p>
                   <p class="hero__caption hero__caption--right">
-                    *Digital Designer, focusing on crafting visual stories across branding and consumer-focused design
+                    ${ui.hero.captionRight}
                   </p>
                 </div>
               </h1>
@@ -71,8 +72,8 @@ function renderHome() {
 
         <section class="works" id="works">
           <div class="works__header fade-in">
-            <h2 class="works__title">Selected Works</h2>
-            <span class="works__period">2020 - 2025</span>
+            <h2 class="works__title">${ui.works.title}</h2>
+            <span class="works__period">${ui.works.period}</span>
           </div>
           <div class="works__grid">${worksGrid}</div>
         </section>

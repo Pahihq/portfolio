@@ -1,8 +1,8 @@
-import { site, paths } from "./data.js";
+import { site, paths, ui } from "./data.js";
 
 const navItems = [
-  { label: "ABOUT", href: paths.about, id: "about" },
-  { label: "CONTACT", href: paths.contact, id: "contact" },
+  { label: ui.nav.about, href: paths.about, id: "about" },
+  { label: ui.nav.contact, href: paths.contact, id: "contact" },
 ];
 
 function renderNavLinks(activePage = "", linkClass = "nav__link") {
@@ -18,7 +18,7 @@ function renderNavLinks(activePage = "", linkClass = "nav__link") {
 /** Круглый переключатель темы — две половинки */
 export function renderThemeSwitcher() {
   return `
-    <button class="theme-switch" id="theme-switch" type="button" aria-label="Toggle light and dark theme">
+    <button class="theme-switch" id="theme-switch" type="button" aria-label="${ui.theme.toggle}">
       <span class="theme-switch__half theme-switch__half--light"></span>
       <span class="theme-switch__half theme-switch__half--dark"></span>
     </button>
@@ -28,7 +28,7 @@ export function renderThemeSwitcher() {
 /** Навигация внутри полноэкранного hero на главной */
 export function renderHeroNav() {
   return `
-    <nav class="hero-nav" aria-label="Main navigation">
+    <nav class="hero-nav" aria-label="${ui.a11y.mainNav}">
       <a class="hero-nav__logo" href="${paths.home}">${site.name}</a>
       <div class="hero-nav__links">${renderNavLinks("", "hero-nav__link")}</div>
       ${renderThemeSwitcher()}
@@ -42,7 +42,7 @@ export function renderHeader(activePage = "") {
     <header class="header" id="header">
       <div class="container container--content header__inner">
         <a class="logo" href="${paths.home}">${site.name}</a>
-        <nav class="nav" aria-label="Main navigation">${renderNavLinks(activePage)}</nav>
+        <nav class="nav" aria-label="${ui.a11y.mainNav}">${renderNavLinks(activePage)}</nav>
         ${renderThemeSwitcher()}
       </div>
     </header>
@@ -62,14 +62,14 @@ export function renderFooter() {
   return `
     <footer class="footer" id="contact">
       <div class="footer__inner">
-        <h2 class="footer__heading">LET'S GET IN TOUCH :)</h2>
+        <h2 class="footer__heading">${ui.footer.heading}</h2>
 
         <div class="footer__center">
           <div class="footer__socials">
-            <a class="social-btn" href="${site.telegram}" target="_blank" rel="noopener noreferrer">Telegram</a>
-            <button class="social-btn" id="email-btn" type="button" data-email="${site.email}">Email</button>
+            <a class="social-btn" href="${site.telegram}" target="_blank" rel="noopener noreferrer">${ui.footer.telegram}</a>
+            <button class="social-btn" id="email-btn" type="button" data-email="${site.email}">${ui.footer.email}</button>
           </div>
-          <button class="footer__top" id="scroll-top-btn" type="button" aria-label="Back to top">↑</button>
+          <button class="footer__top" id="scroll-top-btn" type="button" aria-label="${ui.footer.backToTop}">↑</button>
         </div>
 
         <span class="footer__clock clock" id="clock" aria-live="polite"></span>
@@ -112,12 +112,10 @@ function initClock() {
 
   const update = () => {
     const now = new Date();
-    const hours = now.getHours();
+    const hours = String(now.getHours()).padStart(2, "0");
     const minutes = String(now.getMinutes()).padStart(2, "0");
     const seconds = String(now.getSeconds()).padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
-    const h12 = hours % 12 || 12;
-    clockEl.textContent = `${h12}:${minutes}:${seconds} ${ampm}`;
+    clockEl.textContent = `${hours}:${minutes}:${seconds}`;
   };
 
   update();
@@ -133,7 +131,7 @@ function initEmailCopy() {
     try {
       await navigator.clipboard.writeText(email);
       const original = btn.textContent;
-      btn.textContent = "Copied!";
+      btn.textContent = ui.footer.copied;
       setTimeout(() => {
         btn.textContent = original;
       }, 2000);
