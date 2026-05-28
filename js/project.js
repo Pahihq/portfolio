@@ -24,6 +24,25 @@ export function initProjectPage(slug) {
     ? `<a class="project-nav__link" href="${paths.project(next)}">${ui.project.nextProject}</a>`
     : "<span></span>";
 
+  const breadcrumbTitle = project.breadcrumbTitle || project.displayTitle;
+  const subtitleHtml = project.subtitle
+    ? `<p class="project-hero__subtitle fade-in">${project.subtitle}</p>`
+    : "";
+  const sectionsHtml = project.sections?.length
+    ? `<div class="project-sections container container--content">
+        ${project.sections
+          .map(
+            (section) => `
+          <section class="project-section fade-in">
+            <h2 class="project-section__title">${section.title}</h2>
+            <p class="project-section__text">${section.text}</p>
+          </section>
+        `
+          )
+          .join("")}
+      </div>`
+    : "";
+
   document.body.innerHTML = `
     <div class="page">
       ${renderHeader()}
@@ -34,9 +53,10 @@ export function initProjectPage(slug) {
             <span class="breadcrumb__sep">/</span>
             <a href="${paths.works}">${ui.project.works}</a>
             <span class="breadcrumb__sep">/</span>
-            <span>${project.displayTitle}</span>
+            <span>${breadcrumbTitle}</span>
           </nav>
           <h1 class="project-hero__title fade-in">${project.displayTitle}</h1>
+          ${subtitleHtml}
           <p class="project-hero__description fade-in">${project.description}</p>
           <div class="project-meta fade-in">
             <div>
@@ -53,6 +73,7 @@ export function initProjectPage(slug) {
             </div>
           </div>
         </section>
+        ${sectionsHtml}
         <section class="project-gallery container container--content">${galleryHtml}</section>
         <div class="container container--content project-nav">
           <a class="project-nav__link" href="${paths.home}">${ui.project.backHome}</a>
